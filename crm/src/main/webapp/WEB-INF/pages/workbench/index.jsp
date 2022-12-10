@@ -35,8 +35,8 @@
 			$(this).children("a").css("color","white");
 		});
 		
-		
-		window.open("main/index.html","workareaFrame");
+			
+		window.open("workbench/main/index.do","workareaFrame");
 		
 		// 安全退出按钮
 		$("#logoutBtn").click(function(){
