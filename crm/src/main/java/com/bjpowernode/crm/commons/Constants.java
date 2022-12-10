@@ -29,5 +29,7 @@ public class Constants {
     public static final String TRUE_STRING = "true";
     // 字符串false
     public static final String FALSE_STRING = "false";
+    // 用户列表
+    public static final String USERLIST = "userList";
     // test
 }
