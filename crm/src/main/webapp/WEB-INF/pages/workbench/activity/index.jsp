@@ -19,7 +19,71 @@
 <script type="text/javascript">
 
 	$(function(){
+		// 打开创建市场活动模态窗口
+		$("#createActivityBtn").click(function(){
+			// 重置表单
+			$("#createActivityForm").get(0).reset();
+			// 弹出窗口
+			$("#createActivityModal").modal("show");
+		});
 		
+		$("#saveCreateActivityBtn").click(function(){
+			// 获取数据
+			var owner = $("#create-marketActivityOwner").val();
+			var name = $.trim($("#create-marketActivityName").val());
+			var startDate = $("#create-startTime").val();
+			var endDate = $("#create-endTime").val();
+			var cost = $.trim($("#create-cost").val());
+			var description = $("#create-describe").val();
+			// 校验数据
+			if(owner == ""){
+				alert("拥有者不能为空");
+				return;
+			}
+			if(name == ""){
+				alert("活动名称不能为空");
+				return;
+			}
+			if(startDate != "" && endDate != ""){
+				// 开始日期和结束日期若不为空, 则结束日期不能在开始日期前
+				if(endDate<startDate){
+					alert("结束日期不能小于开始日期");
+					return;
+				}
+			}
+			var regExp = /^(([1-9]\d*)|0)$/;
+			if(!regExp.test(cost)){
+				alert("成本只能为非负整数");
+				return;
+			}
+			// 发送ajax请求
+			$.ajax({
+				url: 'workbench/activity/saveCreateActivity.do',
+				type: 'post',
+				data: {
+					owner: owner,
+					name: name,
+					startDate: startDate,
+					endDate: endDate,
+					cost: cost,
+					description: description
+				},
+				dataType: 'json',
+				success: function(data){
+					if(data.code == '1'){
+						// 关闭模态窗口
+						$("#createActivityModal").modal("hide");
+						// TODO 刷新列表
+					}else{
+						// 提示错误信息
+						alert(data.message);
+					}
+				},
+				error: function(){
+					
+				}
+			});
+		});
 		
 		
 	});
@@ -40,7 +104,7 @@
 				</div>
 				<div class="modal-body">
 				
-					<form class="form-horizontal" role="form">
+					<form class="form-horizontal" role="form" id="createActivityForm">
 					
 						<div class="form-group">
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
@@ -86,7 +150,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button id="saveCreateActivityBtn" type="button" class="btn btn-primary" >保存</button>
 				</div>
 			</div>
 		</div>
@@ -243,7 +307,7 @@
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createActivityModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  <button type="button" class="btn btn-primary" id="createActivityBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>

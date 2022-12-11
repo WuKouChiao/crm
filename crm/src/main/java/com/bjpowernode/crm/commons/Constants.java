@@ -31,5 +31,8 @@ public class Constants {
     public static final String FALSE_STRING = "false";
     // 用户列表
     public static final String USERLIST = "userList";
-    // test
+    // 返回信息 - 成功
+    public static final String RETURN_MESSAGE_SUCCESS = "成功";
+    // 返回信息 - 失败
+    public static final String RETURN_MESSAGE_FAIL = "失败";
 }
