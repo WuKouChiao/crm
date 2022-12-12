@@ -84,7 +84,7 @@
 				}
 			});
 		});
-		$("#create-startTime").datetimepicker({
+		$(".mydate").datetimepicker({
 			language: 'zh-CN',
             format: 'yyyy-mm-dd',
             minView: 'month',
@@ -93,15 +93,7 @@
 			todayBtn: true,
 			clearBtn: true
 		});
-		$("#create-endTime").datetimepicker({
-			language: 'zh-CN',
-		    format: 'yyyy-mm-dd',
-		    minView: 'month',
-		    initialDate: new Date(),
-		    autoclose: true,
-			todayBtn: true,
-			clearBtn: true
-		});
+
 		
 	});
 	
@@ -141,11 +133,11 @@
 						<div class="form-group">
 							<label for="create-startTime" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-startTime">
+								<input type="text" class="form-control mydate" id="create-startTime" readonly>
 							</div>
 							<label for="create-endTime" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-endTime">
+								<input type="text" class="form-control mydate" id="create-endTime" readonly>
 							</div>
 						</div>
                         <div class="form-group">
