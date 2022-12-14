@@ -83,4 +83,7 @@ public class ActivityController {
         // 返回
         return returnObject;
     }
+    public ReturnObject queryActivityByConditionForPage(){
+        return null;
+    }
 }
