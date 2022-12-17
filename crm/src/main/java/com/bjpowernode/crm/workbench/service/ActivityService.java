@@ -26,5 +26,12 @@ public interface ActivityService {
      * @param map
      * @return
      */
-    public List<Activity> selectActivityByConditionForPage(Map map);
+    public List<Activity> selectActivityByConditionForPage(Map<String, Object> map);
+
+    /**
+     * 计算市场活动总数
+     * @param map
+     * @return
+     */
+    public int selectCountOfActivityByCondition(Map<String, Object> map);
 }

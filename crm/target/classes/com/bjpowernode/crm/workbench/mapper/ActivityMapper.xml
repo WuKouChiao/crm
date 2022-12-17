@@ -202,7 +202,7 @@
       edit_by = #{editBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
-  <select id="selectActivityByConditionForPage" parameterType="map" resultType="com.bjpowernode.crm.workbench.domain.Activity">
+  <select id="selectActivityByConditionForPage" parameterType="map" resultMap="BaseResultMap">
     SELECT
       A.id ,
       U1.name owner,
@@ -224,19 +224,44 @@
                      ON A.edit_by = U3.id
     <where>
       <if test="name != null and name != ''" >
-        and name like '%' #{name} '%'
+        and A.name like '%' #{name} '%'
       </if>
       <if test="owner != null and name != ''" >
-        and owner like '%' #{owner} '%'
+        and U1.owner like '%' #{owner} '%'
       </if>
       <if test="startDate != null and startDate != ''" >
-        and startDate &gt;= #{startDate}
+        and A.startDate &gt;= #{startDate}
       </if>
       <if test="endDate != null and endDate != ''" >
-        and endDate &lt;= #{endDate}
+        and A.endDate &lt;= #{endDate}
       </if>
     </where>
     ORDER BY A.create_time
     LIMIT #{beginNo},#{pageSize}
+  </select>
+  <select id="selectCountOfActivityByCondition" parameterType="map" resultType="int">
+    SELECT
+        COUNT(A.id)
+    FROM tbl_activity A
+    INNER JOIN tbl_user U1
+    ON A.owner = U1.id
+    INNER JOIN tbl_user U2
+    ON A.create_by = U2.id
+    LEFT JOIN tbl_user U3
+    ON A.edit_by = U3.id
+    <where>
+      <if test="name != null and name != ''" >
+        and A.name like '%' #{name} '%'
+      </if>
+      <if test="owner != null and name != ''" >
+        and U1.owner like '%' #{owner} '%'
+      </if>
+      <if test="startDate != null and startDate != ''" >
+        and A.startDate &gt;= #{startDate}
+      </if>
+      <if test="endDate != null and endDate != ''" >
+        and A.endDate &lt;= #{endDate}
+      </if>
+    </where>
   </select>
 </mapper>
