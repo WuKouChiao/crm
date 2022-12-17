@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -83,7 +85,33 @@ public class ActivityController {
         // 返回
         return returnObject;
     }
-    public ReturnObject queryActivityByConditionForPage(){
-        return null;
+
+    /**
+     * 查询市场活动
+     * @param name
+     * @param owner
+     * @param startDate
+     * @param endDate
+     * @param beginNo
+     * @param pageSize
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/workbench/activity/queryActivityByConditionForPage.do")
+    public Map queryActivityByConditionForPage(String name, String owner, String startDate, String endDate,
+                                                        int beginNo, int pageSize){
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        map.put("owner", owner);
+        map.put("startDate", startDate);
+        map.put("endDate", endDate);
+        map.put("beginNo", (pageSize-1) * beginNo);
+        map.put("pageSize", pageSize);
+        int i = activityService.selectCountOfActivityByCondition(map);
+        List<Activity> activities = activityService.selectActivityByConditionForPage(map);
+        Map<String, Object> returnMap = new HashMap<>();
+        returnMap.put("activityList", activities);
+        returnMap.put("totalRows", i);
+        return returnMap;
     }
 }
