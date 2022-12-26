@@ -202,8 +202,66 @@
       edit_by = #{editBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
-<!--  <select id="selectActivityByConditionForPage" parameterMap="java.util.Map" resultType="com.bjpowernode.crm.workbench.domain.Activity">-->
-
-<!--  </select>-->
-
+  <select id="selectActivityByConditionForPage" parameterType="map" resultMap="BaseResultMap">
+    SELECT
+      A.id ,
+      U1.name owner,
+      A.name ,
+      A.start_date ,
+      A.end_date ,
+      A.cost ,
+      A.description ,
+      A.create_time ,
+      U2.name create_by,
+      A.edit_time ,
+      U3.name edit_by
+    FROM tbl_activity A
+    INNER JOIN tbl_user U1
+        ON A.owner = U1.id
+    INNER JOIN tbl_user U2
+        ON A.create_by = U2.id
+    LEFT JOIN tbl_user U3
+        ON A.edit_by = U3.id
+    <where>
+      <if test="name != null and name != ''" >
+        and A.name like '%' #{name} '%'
+      </if>
+      <if test="owner != null and owner != ''" >
+        and U1.owner like '%' #{owner} '%'
+      </if>
+      <if test="startDate != null and startDate != ''" >
+        and A.startDate &gt;= #{startDate}
+      </if>
+      <if test="endDate != null and endDate != ''" >
+        and A.endDate &lt;= #{endDate}
+      </if>
+    </where>
+    ORDER BY A.create_time
+    LIMIT #{beginNo},#{pageSize}
+  </select>
+  <select id="selectCountOfActivityByCondition" parameterType="map" resultType="int">
+    SELECT
+        COUNT(A.id)
+    FROM tbl_activity A
+    INNER JOIN tbl_user U1
+    ON A.owner = U1.id
+    INNER JOIN tbl_user U2
+    ON A.create_by = U2.id
+    LEFT JOIN tbl_user U3
+    ON A.edit_by = U3.id
+    <where>
+      <if test="name != null and name != ''" >
+        and A.name like '%' #{name} '%'
+      </if>
+      <if test="owner != null and owner != ''" >
+        and U1.owner like '%' #{owner} '%'
+      </if>
+      <if test="startDate != null and startDate != ''" >
+        and A.startDate &gt;= #{startDate}
+      </if>
+      <if test="endDate != null and endDate != ''" >
+        and A.endDate &lt;= #{endDate}
+      </if>
+    </where>
+  </select>
 </mapper>

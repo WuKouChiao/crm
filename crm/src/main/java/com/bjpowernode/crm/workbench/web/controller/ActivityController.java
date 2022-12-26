@@ -105,7 +105,7 @@ public class ActivityController {
         map.put("owner", owner);
         map.put("startDate", startDate);
         map.put("endDate", endDate);
-        map.put("beginNo", (pageSize-1) * beginNo);
+        map.put("beginNo", (beginNo-1) * pageSize);
         map.put("pageSize", pageSize);
         int i = activityService.selectCountOfActivityByCondition(map);
         List<Activity> activities = activityService.selectActivityByConditionForPage(map);

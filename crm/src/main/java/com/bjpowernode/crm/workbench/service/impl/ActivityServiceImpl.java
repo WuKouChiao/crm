@@ -33,6 +33,6 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public int selectCountOfActivityByCondition(Map<String, Object> map) {
-        return 0;
+        return activityMapper.selectCountOfActivityByCondition(map);
     }
 }

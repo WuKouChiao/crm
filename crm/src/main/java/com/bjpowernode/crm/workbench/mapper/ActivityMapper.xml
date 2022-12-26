@@ -216,17 +216,17 @@
       A.edit_time ,
       U3.name edit_by
     FROM tbl_activity A
-           INNER JOIN tbl_user U1
-                      ON A.owner = U1.id
-           INNER JOIN tbl_user U2
-                      ON A.create_by = U2.id
-           LEFT JOIN tbl_user U3
-                     ON A.edit_by = U3.id
+    INNER JOIN tbl_user U1
+        ON A.owner = U1.id
+    INNER JOIN tbl_user U2
+        ON A.create_by = U2.id
+    LEFT JOIN tbl_user U3
+        ON A.edit_by = U3.id
     <where>
       <if test="name != null and name != ''" >
         and A.name like '%' #{name} '%'
       </if>
-      <if test="owner != null and name != ''" >
+      <if test="owner != null and owner != ''" >
         and U1.owner like '%' #{owner} '%'
       </if>
       <if test="startDate != null and startDate != ''" >
@@ -253,7 +253,7 @@
       <if test="name != null and name != ''" >
         and A.name like '%' #{name} '%'
       </if>
-      <if test="owner != null and name != ''" >
+      <if test="owner != null and owner != ''" >
         and U1.owner like '%' #{owner} '%'
       </if>
       <if test="startDate != null and startDate != ''" >
