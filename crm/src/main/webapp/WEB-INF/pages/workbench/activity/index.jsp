@@ -93,6 +93,15 @@
 			todayBtn: true,
 			clearBtn: true
 		});
+		// 进入市场活动页面立刻查询一次
+		queryActivityByConditionForPage();
+		// 查询按钮绑定查询
+		$('#queryActivityBtn').click(function(){
+			queryActivityByConditionForPage();
+		});
+	});
+	
+	function queryActivityByConditionForPage(){
 		// 获取数据
 		var name = $("#query-name").val();
 		var owner = $("#query-owner").val();
@@ -130,8 +139,7 @@
 				$("#tbody").html(htmlStr);
 			}
 		});
-	});
-	
+	}
 </script>
 </head>
 <body>
@@ -345,7 +353,7 @@
 				    </div>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-default" id="queryActivityBtn">查询</button>
+				  <button type="button" class="btn btn-default" id="queryActivityBtn">查询</button>
 				  
 				</form>
 			</div>
