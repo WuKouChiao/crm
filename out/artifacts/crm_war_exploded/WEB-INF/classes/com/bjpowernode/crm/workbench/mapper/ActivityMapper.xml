@@ -227,13 +227,13 @@
         and A.name like '%' #{name} '%'
       </if>
       <if test="owner != null and owner != ''" >
-        and U1.owner like '%' #{owner} '%'
+        and U1.name like '%' #{owner} '%'
       </if>
       <if test="startDate != null and startDate != ''" >
-        and A.startDate &gt;= #{startDate}
+        and A.start_date &gt;= #{startDate}
       </if>
       <if test="endDate != null and endDate != ''" >
-        and A.endDate &lt;= #{endDate}
+        and A.end_date &lt;= #{endDate}
       </if>
     </where>
     ORDER BY A.create_time
@@ -254,13 +254,13 @@
         and A.name like '%' #{name} '%'
       </if>
       <if test="owner != null and owner != ''" >
-        and U1.owner like '%' #{owner} '%'
+        and U1.name like '%' #{owner} '%'
       </if>
       <if test="startDate != null and startDate != ''" >
-        and A.startDate &gt;= #{startDate}
+        and A.start_date &gt;= #{startDate}
       </if>
       <if test="endDate != null and endDate != ''" >
-        and A.endDate &lt;= #{endDate}
+        and A.end_date &lt;= #{endDate}
       </if>
     </where>
   </select>

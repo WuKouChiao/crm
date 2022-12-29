@@ -94,21 +94,21 @@
 			clearBtn: true
 		});
 		// 进入市场活动页面立刻查询一次
-		queryActivityByConditionForPage();
+		queryActivityByConditionForPage(1, 10);
 		// 查询按钮绑定查询
 		$('#queryActivityBtn').click(function(){
-			queryActivityByConditionForPage();
+			queryActivityByConditionForPage(1, 10);
 		});
 	});
 	
-	function queryActivityByConditionForPage(){
+	function queryActivityByConditionForPage(pageNo, pageSize){
 		// 获取数据
 		var name = $("#query-name").val();
 		var owner = $("#query-owner").val();
 		var startDate = $("#query-startDate").val();
 		var endDate = $("#query-endDate").val();
-		var pageNo = 1;
-		var pageSize = 10;
+		// var pageNo = 1;
+		// var pageSize = 10;
 		// 发送请求
 		$.ajax({
 			url: 'workbench/activity/queryActivityByConditionForPage.do',
