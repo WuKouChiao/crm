@@ -35,8 +35,4 @@ public class Constants {
     public static final String RETURN_MESSAGE_SUCCESS = "成功";
     // 返回信息 - 失败
     public static final String RETURN_MESSAGE_FAIL = "失败";
-    // 返回信息 - 成功
-    public static final String RETURN_MESSAGE_SUCCESS_TEST = "成功";
-    // 返回信息 - 失败
-    public static final String RETURN_MESSAGE_FAIL_TEST = "失败";
 }
