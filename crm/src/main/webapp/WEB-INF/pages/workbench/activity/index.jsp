@@ -100,7 +100,8 @@
 		queryActivityByConditionForPage(1, 10);
 		// 查询按钮绑定查询
 		$('#queryActivityBtn').click(function(){
-			queryActivityByConditionForPage(1, 10);
+			var pageSize = $('#demo_pag1').bs_pagination('getOption', 'rowsPerPage');
+			queryActivityByConditionForPage(1, pageSize);
 		});
 	});
 	
