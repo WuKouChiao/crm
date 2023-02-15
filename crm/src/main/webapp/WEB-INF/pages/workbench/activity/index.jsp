@@ -76,7 +76,9 @@
 					if(data.code == '1'){
 						// 关闭模态窗口
 						$("#createActivityModal").modal("hide");
-						// TODO 刷新列表
+						// 刷新列表
+						var pageSize = $('#demo_pag1').bs_pagination('getOption', 'rowsPerPage');
+						queryActivityByConditionForPage(1, pageSize);
 					}else{
 						// 提示错误信息
 						alert(data.message);
