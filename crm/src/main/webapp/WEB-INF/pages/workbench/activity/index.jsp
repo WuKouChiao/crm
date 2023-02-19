@@ -29,7 +29,7 @@
 			// 弹出窗口
 			$("#createActivityModal").modal("show");
 		});
-		
+		// 创建市场活动
 		$("#saveCreateActivityBtn").click(function(){
 			// 获取数据
 			var owner = $("#create-marketActivityOwner").val();
@@ -104,6 +104,10 @@
 		$('#queryActivityBtn').click(function(){
 			var pageSize = $('#demo_pag1').bs_pagination('getOption', 'rowsPerPage');
 			queryActivityByConditionForPage(1, pageSize);
+		});
+		// 列表全选按钮事件
+		$('#checkAll').click(function (){
+			$('#tbody input[type=checkbox]').prop('checked', this.checked);
 		});
 	});
 	
@@ -410,7 +414,7 @@
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input id="checkAll" type="checkbox" /></td>
 							<td>名称</td>
                             <td>所有者</td>
 							<td>开始日期</td>
