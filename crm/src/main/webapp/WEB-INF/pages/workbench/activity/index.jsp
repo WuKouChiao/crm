@@ -109,6 +109,24 @@
 		$('#checkAll').click(function (){
 			$('#tbody input[type=checkbox]').prop('checked', this.checked);
 		});
+		// 通过.on来实现列表全选
+		$("#tBody").on("click","input[type='checkbox']",function (){
+			// 如果列表中的checkbox全选, 则把"全选"按钮也选中
+			if($("#tBody input[type=checkbox]").size()==$("#tBody input[type=checkbox]:checked").size()){
+				$("#checkAll").prop("checked",true);
+			}else{
+				// 若至少有一个没选中, 则把全选按钮取消
+				$("#checkAll").prop("checked",false);
+			}
+		});
+		// $("#tBody").on("click","input[type='checkbox']",function () {
+		// 	//如果列表中的所有checkbox都选中，则"全选"按钮也选中
+		// 	if($("#tBody input[type='checkbox']").size()==$("#tBody input[type='checkbox']:checked").size()){
+		// 		$("#checkAll").prop("checked",true);
+		// 	}else{//如果列表中的所有checkbox至少有一个没选中，则"全选"按钮也取消
+		// 		$("#checkAll").prop("checked",false);
+		// 	}
+		// });
 	});
 	
 	function queryActivityByConditionForPage(pageNo, pageSize){
@@ -146,7 +164,7 @@
 					htmlStr+="	<td>"+ obj.endDate +"</td>"
 					htmlStr+="</tr>"
 				});
-				$("#tbody").html(htmlStr);
+				$("#tBody").html(htmlStr);
 
 				// 计算总数
 				var totalPages = 1;
@@ -176,6 +194,8 @@
 						var pageNo = pageObj.currentPage;
 						var pageSize = pageObj.rowsPerPage;
 						queryActivityByConditionForPage(pageNo, pageSize);
+						// 取消全选按钮
+						$("#checkAll").prop("checked", false);
 					}
 				});
 			}
@@ -421,7 +441,7 @@
 							<td>结束日期</td>
 						</tr>
 					</thead>
-					<tbody id="tbody">
+					<tbody id="tBody">
 						<!-- <tr class="active">
 							<td><input type="checkbox" /></td>
 							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">发传单</a></td>
