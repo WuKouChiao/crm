@@ -34,4 +34,10 @@ public interface ActivityService {
      * @return
      */
     public int selectCountOfActivityByCondition(Map<String, Object> map);
+    /**
+     * 批量删除市场活动
+     * @param ids
+     * @return
+     */
+    public int deleteActivityByIds(String[] ids);
 }
