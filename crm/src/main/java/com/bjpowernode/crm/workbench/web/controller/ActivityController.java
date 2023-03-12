@@ -36,11 +36,12 @@ public class ActivityController {
     ActivityService activityService;
     /**
      * 跳转到市场活动页面
+     *
      * @param request
      * @return
      */
     @RequestMapping("/workbench/activity/index.do")
-    public String index(HttpServletRequest request){
+    public String index(HttpServletRequest request) {
         // 调用服务层查询所有用户
         List<User> users = userService.queryAllUsers();
         // 保存到作用域(request)
@@ -51,12 +52,13 @@ public class ActivityController {
 
     /**
      * 新增市场活动
+     *
      * @param activity
      * @return
      */
     @ResponseBody
     @RequestMapping("/workbench/activity/saveCreateActivity.do")
-    public Object saveCreateActivity(Activity activity, HttpSession session){
+    public Object saveCreateActivity(Activity activity, HttpSession session) {
         // 保存参数 - id 创建者 更新者 创建时间 更新时间
         activity.setId(UUIDUtils.createUUID());
         User user = (User) session.getAttribute(Constants.SESSION_USER);
@@ -66,18 +68,18 @@ public class ActivityController {
         activity.setCreateTime(data);
         activity.setEditTime(data);
         ReturnObject returnObject = new ReturnObject();
-        try{
+        try {
             // 执行新增
             int result = activityService.insertActivity(activity);
             // 判断是否成功
-            if(result > 0){
+            if (result > 0) {
                 returnObject.setCode(Constants.RETURN_OBJECT_CODE_SUCCESS);
                 returnObject.setMessage(Constants.RETURN_MESSAGE_SUCCESS);
-            }else{
+            } else {
                 returnObject.setCode(Constants.RETURN_OBJECT_CODE_FAIL);
                 returnObject.setMessage(Constants.RETURN_MESSAGE_FAIL);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             returnObject.setCode(Constants.RETURN_OBJECT_CODE_FAIL);
             returnObject.setMessage(Constants.RETURN_MESSAGE_FAIL);
@@ -88,6 +90,7 @@ public class ActivityController {
 
     /**
      * 查询市场活动
+     *
      * @param name
      * @param owner
      * @param startDate
@@ -99,13 +102,13 @@ public class ActivityController {
     @ResponseBody
     @RequestMapping("/workbench/activity/queryActivityByConditionForPage.do")
     public Map queryActivityByConditionForPage(String name, String owner, String startDate, String endDate,
-                                                        int beginNo, int pageSize){
+                                               int beginNo, int pageSize) {
         Map<String, Object> map = new HashMap<>();
         map.put("name", name);
         map.put("owner", owner);
         map.put("startDate", startDate);
         map.put("endDate", endDate);
-        map.put("beginNo", (beginNo-1) * pageSize);
+        map.put("beginNo", (beginNo - 1) * pageSize);
         map.put("pageSize", pageSize);
         int i = activityService.selectCountOfActivityByCondition(map);
         List<Activity> activities = activityService.selectActivityByConditionForPage(map);
@@ -113,5 +116,31 @@ public class ActivityController {
         returnMap.put("activityList", activities);
         returnMap.put("totalRows", i);
         return returnMap;
+    }
+
+    /**
+     * 批量删除市场活动
+     *
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/workbench/activity/deleteActivityIds.do")
+    public Object deleteActivityIds(String[] id) {
+        ReturnObject returnObject = new ReturnObject();
+        try {
+            int i = activityService.deleteActivityByIds(id);
+            if (i > 0) {
+                returnObject.setCode(Constants.RETURN_OBJECT_CODE_SUCCESS);
+            } else {
+                returnObject.setCode(Constants.RETURN_OBJECT_CODE_FAIL);
+                returnObject.setMessage(Constants.RETURN_MESSAGE_DELETE_ACTIVITY_FAIL);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObject.setCode(Constants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage(Constants.RETURN_MESSAGE_DELETE_ACTIVITY_FAIL);
+        }
+        return returnObject;
     }
 }

@@ -13,6 +13,12 @@ public class Constants {
     public final static String RETURN_OBJECT_CODE_SUCCESS = "1";
     // 失败状态码
     public final static String RETURN_OBJECT_CODE_FAIL = "0";
+    // 返回信息 - 成功
+    public static final String RETURN_MESSAGE_SUCCESS = "成功";
+    // 返回信息 - 失败
+    public static final String RETURN_MESSAGE_FAIL = "失败";
+    // 返回信息 - 市场活动删除失败
+    public static final String RETURN_MESSAGE_DELETE_ACTIVITY_FAIL = "系统繁忙, 请稍后再试或者联系运营部门MES组";
     // 账户不锁定值
     public final static String NOT_LOCK_STATE = "1";
     // 保存当前用户的key
@@ -31,8 +37,5 @@ public class Constants {
     public static final String FALSE_STRING = "false";
     // 用户列表
     public static final String USERLIST = "userList";
-    // 返回信息 - 成功
-    public static final String RETURN_MESSAGE_SUCCESS = "成功";
-    // 返回信息 - 失败
-    public static final String RETURN_MESSAGE_FAIL = "失败";
+
 }
