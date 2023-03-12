@@ -268,7 +268,7 @@
     delete from tbl_activity ta
     where ta.id in
     <foreach collection="array" item="id" separator="," open="(" close=")">
-      {#id}
+      #{id}
     </foreach>
   </delete>
 </mapper>
