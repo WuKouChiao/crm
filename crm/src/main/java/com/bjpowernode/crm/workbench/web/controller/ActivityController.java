@@ -10,6 +10,7 @@ import com.bjpowernode.crm.workbench.service.ActivityService;
 import com.bjpowernode.crm.settings.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -142,5 +143,17 @@ public class ActivityController {
             returnObject.setMessage(Constants.RETURN_MESSAGE_DELETE_ACTIVITY_FAIL);
         }
         return returnObject;
+    }
+
+    /**
+     * 根据id查询市场活动信息
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/workbench/activity/queryActivityByid.do")
+    public Object queryActivityByid(String id){
+        Activity activity = activityService.selectActivityByid(id);
+        return activity;
     }
 }

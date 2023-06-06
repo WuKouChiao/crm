@@ -264,4 +264,17 @@
       </if>
     </where>
   </select>
+  <delete id="deleteActivityByIds" parameterType="string">
+    delete from tbl_activity ta
+    where ta.id in
+    <foreach collection="array" item="id" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+  </delete>
+  <select id="selectActivityById" parameterType="string" resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List"></include>
+    from tbl_activity
+    where id=#{id}
+  </select>
 </mapper>

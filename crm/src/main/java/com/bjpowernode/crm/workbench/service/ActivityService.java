@@ -40,4 +40,10 @@ public interface ActivityService {
      * @return
      */
     public int deleteActivityByIds(String[] ids);
+    /**
+     *根据id查询市场活动
+     * @param id
+     * @return
+     */
+    public Activity selectActivityByid(String id);
 }

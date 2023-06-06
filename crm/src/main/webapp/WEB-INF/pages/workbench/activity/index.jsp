@@ -121,6 +121,7 @@
                     $("#checkAll").prop("checked", false);
                 }
             });
+            // 删除按钮
             $("#deleteActivitBtn").click(function () {
                 console.log('debug');
                 // 获取删除列表
@@ -135,7 +136,7 @@
                 $.each(checkedIds, function () {
                     ids += "id=" + this.value + "&";
                 })
-                ids = ids.substring(0,  Number(ids.length-1));
+                ids = ids.substring(0, Number(ids.length - 1));
                 // 提示确认删除
                 if (confirm("确认删除?")) {
                     // 发送ajax请求
@@ -157,81 +158,120 @@
                     });
                 }
             });
-        });
-
-        function queryActivityByConditionForPage(pageNo, pageSize) {
-            // 获取数据
-            var name = $("#query-name").val();
-            var owner = $("#query-owner").val();
-            var startDate = $("#query-startDate").val();
-            var endDate = $("#query-endDate").val();
-            // var pageNo = 1;
-            // var pageSize = 10;
-            // 发送请求
-            $.ajax({
-                url: 'workbench/activity/queryActivityByConditionForPage.do',
-                type: 'post',
-                data: {
-                    name: name,
-                    owner: owner,
-                    startDate: startDate,
-                    endDate: endDate,
-                    beginNo: pageNo,
-                    pageSize: pageSize
-                },
-                dataType: 'json',
-                success: function (data) {
-                    // 显示总条数
-                    $('#totalRowsB').text(data.totalRows);
-                    // 添加记录
-                    var htmlStr = '';
-                    $.each(data.activityList, function (index, obj) {
-                        htmlStr += "<tr class=\"active\">"
-                        htmlStr += "	<td><input type=\"checkbox\" value=\"" + obj.id + "\"/></td>"
-                        htmlStr += "	<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='detail.html';\">" + obj.name + "</a></td>"
-                        htmlStr += "    <td>" + obj.owner + "</td>"
-                        htmlStr += "	<td>" + obj.startDate + "</td>"
-                        htmlStr += "	<td>" + obj.endDate + "</td>"
-                        htmlStr += "</tr>"
-                    });
-                    $("#tBody").html(htmlStr);
-
-                    // 计算总数
-                    var totalPages = 1;
-                    if (data.totalRows % pageSize == 0) {
-                        totalPages = data.totalRows / pageSize;
-                    } else {
-                        totalPages = parseInt(data.totalRows / pageSize) + 1;
-                    }
-
-                    $("#demo_pag1").bs_pagination({
-                        currentPage: pageNo,//当前页号,相当于pageNo
-
-                        rowsPerPage: pageSize,//每页显示条数,相当于pageSize
-                        totalRows: 1000,//总条数
-                        totalPages: totalPages,  //总页数,必填参数.
-
-                        visiblePageLinks: 5,//最多可以显示的卡片数
-
-                        showGoToPage: true,//是否显示"跳转到"部分,默认true--显示
-                        showRowsPerPage: true,//是否显示"每页显示条数"部分。默认true--显示
-                        showRowsInfo: true,//是否显示记录的信息，默认true--显示
-
-                        //用户每次切换页号，都自动触发本函数;
-                        //每次返回切换页号之后的pageNo和pageSize
-                        onChangePage: function (event, pageObj) { // returns page_num and rows_per_page after a link has clicked
-                            //js代码
-                            var pageNo = pageObj.currentPage;
-                            var pageSize = pageObj.rowsPerPage;
-                            queryActivityByConditionForPage(pageNo, pageSize);
-                            // 取消全选按钮
-                            $("#checkAll").prop("checked", false);
-                        }
-                    });
-
+            // 打开修改市场活动模态窗口
+            $("#updateActivityBtn").click(function () {
+                // 获取删除列表
+                var checkedIds = $("#tBody input[type=checkbox]:checked");
+                // 校验是否选中
+                if (checkedIds.size() < 1) {
+                    alert("请选择一条市场活动!");
+                    return;
+                } else if (checkedIds.size() > 1) {
+                    alert("不允许选择多条市场活动!")
+                    return;
                 }
+                var id = checkedIds[0].value;
+                // 查询市场活动信息
+                $.ajax({
+                    url: "workbench/activity/queryActivityByid.do",
+                    type: "post",
+                    data: {id: id},
+                    dataType: "json",
+                    success: function (data) {
+                        if (data == undefined || data == null || data == "") {
+                            alert("未能找到该活动信息, 请联系管理员!");
+                            return;
+                        }
+                        var id = data.id;
+                        var owner = data.owner;
+                        var name = data.name;
+                        var startDate = data.startDate;
+                        var endDate = data.endDate;
+                        var cost = data.cost;
+                        var description = data.description;
+                        $("#edit-marketActivityName").val(name);
+                    }
+                });
+                // 重置表单
+                // $("#editActivityModal").get(0).reset();
+                // 弹出窗口
+                $("#editActivityModal").modal("show");
             });
-        }
+
+            function queryActivityByConditionForPage(pageNo, pageSize) {
+                // 获取数据
+                var name = $("#query-name").val();
+                var owner = $("#query-owner").val();
+                var startDate = $("#query-startDate").val();
+                var endDate = $("#query-endDate").val();
+                // var pageNo = 1;
+                // var pageSize = 10;
+                // 发送请求
+                $.ajax({
+                    url: 'workbench/activity/queryActivityByConditionForPage.do',
+                    type: 'post',
+                    data: {
+                        name: name,
+                        owner: owner,
+                        startDate: startDate,
+                        endDate: endDate,
+                        beginNo: pageNo,
+                        pageSize: pageSize
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        // 显示总条数
+                        $('#totalRowsB').text(data.totalRows);
+                        // 添加记录
+                        var htmlStr = '';
+                        $.each(data.activityList, function (index, obj) {
+                            htmlStr += "<tr class=\"active\">"
+                            htmlStr += "	<td><input type=\"checkbox\" value=\"" + obj.id + "\"/></td>"
+                            htmlStr += "	<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='detail.html';\">" + obj.name + "</a></td>"
+                            htmlStr += "    <td>" + obj.owner + "</td>"
+                            htmlStr += "	<td>" + obj.startDate + "</td>"
+                            htmlStr += "	<td>" + obj.endDate + "</td>"
+                            htmlStr += "</tr>"
+                        });
+                        $("#tBody").html(htmlStr);
+
+                        // 计算总数
+                        var totalPages = 1;
+                        if (data.totalRows % pageSize == 0) {
+                            totalPages = data.totalRows / pageSize;
+                        } else {
+                            totalPages = parseInt(data.totalRows / pageSize) + 1;
+                        }
+
+                        $("#demo_pag1").bs_pagination({
+                            currentPage: pageNo,//当前页号,相当于pageNo
+
+                            rowsPerPage: pageSize,//每页显示条数,相当于pageSize
+                            totalRows: 1000,//总条数
+                            totalPages: totalPages,  //总页数,必填参数.
+
+                            visiblePageLinks: 5,//最多可以显示的卡片数
+
+                            showGoToPage: true,//是否显示"跳转到"部分,默认true--显示
+                            showRowsPerPage: true,//是否显示"每页显示条数"部分。默认true--显示
+                            showRowsInfo: true,//是否显示记录的信息，默认true--显示
+
+                            //用户每次切换页号，都自动触发本函数;
+                            //每次返回切换页号之后的pageNo和pageSize
+                            onChangePage: function (event, pageObj) { // returns page_num and rows_per_page after a link has clicked
+                                //js代码
+                                var pageNo = pageObj.currentPage;
+                                var pageSize = pageObj.rowsPerPage;
+                                queryActivityByConditionForPage(pageNo, pageSize);
+                                // 取消全选按钮
+                                $("#checkAll").prop("checked", false);
+                            }
+                        });
+
+                    }
+                });
+            }
+        });
     </script>
 </head>
 <body>
@@ -459,7 +499,7 @@
                 <button type="button" class="btn btn-primary" id="createActivityBtn"><span
                         class="glyphicon glyphicon-plus"></span> 创建
                 </button>
-                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span
+                <button id="updateActivityBtn" type="button" class="btn btn-default"><span
                         class="glyphicon glyphicon-pencil"></span> 修改
                 </button>
                 <button id="deleteActivitBtn" type="button" class="btn btn-danger"><span
