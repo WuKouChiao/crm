@@ -46,4 +46,11 @@ public interface ActivityService {
      * @return
      */
     public Activity selectActivityByid(String id);
+
+    /**
+     * 根据id更新市场活动
+     * @param activity
+     * @return
+     */
+    public int updateActivityByid(Activity activity);
 }

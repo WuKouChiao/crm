@@ -189,7 +189,13 @@
                         var endDate = data.endDate;
                         var cost = data.cost;
                         var description = data.description;
+                        $("#edit-id").val(id);
+                        $("#edit-marketActivityOwner").val(owner);
                         $("#edit-marketActivityName").val(name);
+                        $("#edit-startTime").val(startDate);
+                        $("#edit-endTime").val(endDate);
+                        $("#edit-cost").val(cost);
+                        $("#edit-describe").val(description)
                     }
                 });
                 // 重置表单
@@ -197,7 +203,46 @@
                 // 弹出窗口
                 $("#editActivityModal").modal("show");
             });
-
+            // 更新市场活动按钮
+            $("#editUpdate").click(function (){
+                debugger;
+                // 取值
+                var id = $("#edit-id").val();
+                var owner = $("#edit-marketActivityOwner").val();
+                var name = $("#edit-marketActivityName").val();
+                var startTime = $("#edit-startTime").val().toString();
+                var endTime = $("#edit-endTime").val();
+                var cost = $("#edit-cost").val();
+                var describe = $("#edit-describe").val()
+                // TODO 参数校验
+                // 发送ajax请求
+                $.ajax({
+                    url: 'workbench/activity/updateAcitvityByid.do',
+                    type: 'post',
+                    data: {
+                        id: id,
+                        owner: owner,
+                        name: name,
+                        startDate: startTime,
+                        endDate: endTime,
+                        cost: cost,
+                        describe: describe
+                    },
+                    dataType: 'json',
+                    success: function (data){
+                        if(data.code == 1){
+                            alert(data.message);
+                            // 关闭修改模态窗口
+                            $("#editActivityModal").modal("hide");
+                            // 刷新列表
+                            var pageSize = $('#demo_pag1').bs_pagination('getOption', 'rowsPerPage');
+                            queryActivityByConditionForPage(1, pageSize);
+                        }else {
+                            alert(data.message);
+                        }
+                    }
+                });
+            });
             function queryActivityByConditionForPage(pageNo, pageSize) {
                 // 获取数据
                 var name = $("#query-name").val();
@@ -357,6 +402,7 @@
                 <form class="form-horizontal" role="form">
 
                     <div class="form-group">
+                        <input type="hidden" id="edit-id">
                         <label for="edit-marketActivityOwner" class="col-sm-2 control-label">所有者<span
                                 style="font-size: 15px; color: red;">*</span></label>
                         <div class="col-sm-10" style="width: 300px;">
@@ -376,11 +422,11 @@
                     <div class="form-group">
                         <label for="edit-startTime" class="col-sm-2 control-label">开始日期</label>
                         <div class="col-sm-10" style="width: 300px;">
-                            <input type="text" class="form-control" id="edit-startTime" value="2020-10-10">
+                            <input type="text" class="form-control mydate" id="edit-startTime" readonly>
                         </div>
                         <label for="edit-endTime" class="col-sm-2 control-label">结束日期</label>
                         <div class="col-sm-10" style="width: 300px;">
-                            <input type="text" class="form-control" id="edit-endTime" value="2020-10-20">
+                            <input type="text" class="form-control mydate" id="edit-endTime" readonly>
                         </div>
                     </div>
 
@@ -403,7 +449,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+                <button id="editUpdate" type="button" class="btn btn-primary" >更新</button>
             </div>
         </div>
     </div>

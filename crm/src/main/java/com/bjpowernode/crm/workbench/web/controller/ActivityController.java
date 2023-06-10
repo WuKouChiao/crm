@@ -156,4 +156,18 @@ public class ActivityController {
         Activity activity = activityService.selectActivityByid(id);
         return activity;
     }
+    @ResponseBody
+    @RequestMapping("/workbench/activity/updateAcitvityByid.do")
+    public Object updateActivityByid(Activity activity){
+        ReturnObject returnObject = new ReturnObject();
+        int i = activityService.updateActivityByid(activity);
+        if(i == 1){
+            returnObject.setCode(Constants.RETURN_OBJECT_CODE_SUCCESS);
+            returnObject.setMessage(Constants.RETURN_MESSAGE_SUCCESS);
+        }else {
+            returnObject.setCode(Constants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage(Constants.RETURN_MESSAGE_FAIL);
+        }
+        return returnObject;
+    }
 }
