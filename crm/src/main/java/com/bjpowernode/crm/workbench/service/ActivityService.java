@@ -53,4 +53,10 @@ public interface ActivityService {
      * @return
      */
     public int updateActivityByid(Activity activity);
+
+    /**
+     * 查询所有市场活动
+     * @return
+     */
+    public List<Activity> queryAllActivitys();
 }

@@ -283,4 +283,17 @@
         description = #{description},edit_time = #{editTime},edit_by = #{editBy}
     where id = #{id}
   </update>
+  <select id="selectAllActivitys" resultMap="BaseResultMap">
+    SELECT
+      A.id ,U1.name owner,A.name ,A.start_date ,A.end_date ,A.cost ,A.description ,A.create_time ,
+      U2.name create_by,A.edit_time ,U3.name edit_by
+    FROM tbl_activity A
+           INNER JOIN tbl_user U1
+                      ON A.owner = U1.id
+           INNER JOIN tbl_user U2
+                      ON A.create_by = U2.id
+           LEFT JOIN tbl_user U3
+                     ON A.edit_by = U3.id
+    ORDER BY A.create_time
+  </select>
 </mapper>
