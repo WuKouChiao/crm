@@ -249,11 +249,12 @@ public class ActivityController {
             cell = row1.createCell(5);
             cell.setCellValue(activity.getDescription());
         }
-        FileOutputStream os =
-                new FileOutputStream("D:\\WorkSpace\\crm\\crm\\src\\test\\excelFile\\activityList.xls");
-        sheets.write(os);
-        sheets.close();
-        os.close();
+        // 效率过低, 这其中先写入到磁盘, 在从磁盘读取给用户
+//        FileOutputStream os =
+//                new FileOutputStream("D:\\WorkSpace\\crm\\crm\\src\\test\\excelFile\\activityList.xls");
+//        sheets.write(os);
+//        sheets.close();
+//        os.close();
 
         // 设置响应类型
         response.setContentType("application/octet-stream;charest=UTF-8");
@@ -262,15 +263,19 @@ public class ActivityController {
         // 浏览器接收到响应信息后, 默认情况下, 直接在显示窗口中打开响应信息; 即使打不开, 也会调用应用程序打开
         response.addHeader("Content-Disposition", "attachment;filename=mystudentList.xls");
         // 读取excel文件(InputStream), 把输出到浏览器(OutputStream)
-        FileInputStream fileInputStream =
-                new FileInputStream("D:\\WorkSpace\\crm\\crm\\src\\test\\excelFile\\activityList.xls");
-        byte[] bytes = new byte[256];
-        int len = 0;
-        while ((len = fileInputStream.read(bytes)) != -1) {
-            outputStream.write(bytes, 0, len);
-        }
+        // 效率过低
+//        FileInputStream fileInputStream =
+//                new FileInputStream("D:\\WorkSpace\\crm\\crm\\src\\test\\excelFile\\activityList.xls");
+//        byte[] bytes = new byte[256];
+//        int len = 0;
+//        while ((len = fileInputStream.read(bytes)) != -1) {
+//            outputStream.write(bytes, 0, len);
+//        }
         // 关闭资源
-        fileInputStream.close();
+//        fileInputStream.close();
+        // 直接写入输出流, 内存->内存 效率高
+        sheets.write(outputStream);
+        sheets.close();
         // 不需要关闭, 因为不是此处创建的, tomcat会自己关闭, 但是需要刷新, 需要把写入缓存中的数据刷新, 防止影响其他功能
         outputStream.flush();
     }
