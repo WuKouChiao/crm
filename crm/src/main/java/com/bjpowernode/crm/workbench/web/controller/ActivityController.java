@@ -17,11 +17,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -213,6 +215,7 @@ public class ActivityController {
 
     /**
      * 导出全部市场活动
+     *
      * @param response
      * @throws Exception
      */
@@ -278,5 +281,26 @@ public class ActivityController {
         sheets.close();
         // 不需要关闭, 因为不是此处创建的, tomcat会自己关闭, 但是需要刷新, 需要把写入缓存中的数据刷新, 防止影响其他功能
         outputStream.flush();
+    }
+
+    /**
+     * 上传文件测试类
+     *
+     * @param userName
+     * @param myFile
+     * @return
+     */
+    @RequestMapping("/workbench/activity/fileUpload.do")
+    @ResponseBody
+    public Object fileUpload(String userName, MultipartFile myFile) throws Exception{
+        System.out.println("userName=" + userName);
+        File file = new File("D:\\WorkSpace\\crm\\crm\\src\\test\\java\\poi\\fileUploadTest.xls");
+        myFile.transferTo(file);
+
+        // 返回响应信息
+        ReturnObject returnObject = new ReturnObject();
+        returnObject.setCode(Constants.RETURN_OBJECT_CODE_SUCCESS);
+        returnObject.setMessage(Constants.RETURN_MESSAGE_SUCCESS);
+        return returnObject;
     }
 }
