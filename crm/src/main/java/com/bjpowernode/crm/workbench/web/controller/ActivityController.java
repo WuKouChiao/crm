@@ -3,6 +3,7 @@ package com.bjpowernode.crm.workbench.web.controller;
 import com.bjpowernode.crm.commons.Constants;
 import com.bjpowernode.crm.commons.domain.ReturnObject;
 import com.bjpowernode.crm.commons.utils.DateUtils;
+import com.bjpowernode.crm.commons.utils.HSSFUtile;
 import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.settings.domain.User;
@@ -12,6 +13,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.extractor.ExcelExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +25,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -292,9 +288,10 @@ public class ActivityController {
      */
     @RequestMapping("/workbench/activity/fileUpload.do")
     @ResponseBody
-    public Object fileUpload(String userName, MultipartFile myFile) throws Exception{
+    public Object fileUpload(String userName, MultipartFile myFile) throws Exception {
         System.out.println("userName=" + userName);
-        File file = new File("D:\\WorkSpace\\crm\\crm\\src\\test\\java\\poi\\fileUploadTest.xls");
+        String originalFilename = myFile.getOriginalFilename();
+        File file = new File("D:\\WorkSpace\\crm\\crm\\src\\test\\java\\poi\\" + originalFilename);
         myFile.transferTo(file);
 
         // 返回响应信息
@@ -302,5 +299,63 @@ public class ActivityController {
         returnObject.setCode(Constants.RETURN_OBJECT_CODE_SUCCESS);
         returnObject.setMessage(Constants.RETURN_MESSAGE_SUCCESS);
         return returnObject;
+    }
+
+    /**
+     * 批量导入市场活动
+     * @param activityFile
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/workbench/activity/importActivity.do")
+    public Object inportActivity(MultipartFile activityFile, HttpSession session, String userName) {
+        User user = (User) session.getAttribute(Constants.SESSION_USER);
+        try {
+            InputStream inputStream = activityFile.getInputStream();
+            // 解析后Excel文件
+            HSSFWorkbook sheets = new HSSFWorkbook(inputStream);
+            HSSFSheet sheetAt = sheets.getSheetAt(0);
+            List<Activity> activities = new ArrayList<>();
+            // 构造导入市场活动List, 遍历每一行数据
+            for (int i = 1; i <= sheetAt.getLastRowNum(); i++) {
+                Activity activity = new Activity();
+                HSSFRow row = sheetAt.getRow(i);
+                activity.setId(UUIDUtils.createUUID());
+                activity.setOwner(user.getId());
+                activity.setCreateTime(DateUtils.formartDateTime(new Date()));
+                activity.setCreateBy(user.getId());
+                // 遍历每一列数据
+                for (int j = 0; j < row.getLastCellNum(); j++) {
+                    HSSFCell cell = row.getCell(i);
+                    String cellValueForStr = HSSFUtile.getCellValueForStr(cell);
+                    if(j == 0){
+                        activity.setName(cellValueForStr);
+                    }else if(j == 1){
+                        activity.setStartDate(cellValueForStr);
+                    }else if(j == 2){
+                        activity.setEndDate(cellValueForStr);
+                    }else if(j == 3){
+                        activity.setCost(cellValueForStr);
+                    }else if(j == 4){
+                        activity.setDescription(cellValueForStr);
+                    }
+                }
+                activities.add(activity);
+            }
+            sheets.close();
+            inputStream.close();
+            int inprotNumber = activityService.saveCreateActivityByList(activities);
+            ReturnObject returnObject = new ReturnObject();
+            returnObject.setCode(Constants.RETURN_OBJECT_CODE_SUCCESS);
+            returnObject.setMessage(Constants.RETURN_MESSAGE_SUCCESS + inprotNumber);
+            return returnObject;
+        } catch (IOException e) {
+            e.printStackTrace();
+            ReturnObject returnObject = new ReturnObject();
+            returnObject.setCode(Constants.RETURN_OBJECT_CODE_FAIL);
+            returnObject.setMessage(Constants.RETURN_MESSAGE_FAIL);
+            return returnObject;
+        }
     }
 }

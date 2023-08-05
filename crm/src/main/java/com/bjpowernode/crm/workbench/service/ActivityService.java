@@ -59,4 +59,11 @@ public interface ActivityService {
      * @return
      */
     public List<Activity> queryAllActivitys();
+
+    /**
+     * 批量导入市场活动
+     * @param activityList
+     * @return
+     */
+    public int saveCreateActivityByList(List<Activity> activityList);
 }

@@ -204,7 +204,7 @@
                 $("#editActivityModal").modal("show");
             });
             // 更新市场活动按钮
-            $("#editUpdate").click(function (){
+            $("#editUpdate").click(function () {
                 debugger;
                 // 取值
                 var id = $("#edit-id").val();
@@ -229,15 +229,15 @@
                         describe: describe
                     },
                     dataType: 'json',
-                    success: function (data){
-                        if(data.code == 1){
+                    success: function (data) {
+                        if (data.code == 1) {
                             alert(data.message);
                             // 关闭修改模态窗口
                             $("#editActivityModal").modal("hide");
                             // 刷新列表
                             var pageSize = $('#demo_pag1').bs_pagination('getOption', 'rowsPerPage');
                             queryActivityByConditionForPage(1, pageSize);
-                        }else {
+                        } else {
                             alert(data.message);
                         }
                     }
@@ -248,6 +248,51 @@
                 // 发送同步请求
                 window.location.href = "workbench/activity/exprotAllActivity.do";
             });
+            // 导入按钮点击事件
+            $("#importActivityBtn").click(function () {
+                debugger;
+                // 收集参数
+                var activityFile = $('#activityFile')[0].files[0]; // 获取文件对象
+                var activityFileName = activityFile.name; // 获取文件名
+                var suffix = activityFileName.substr(activityFileName.lastIndexOf('.')+1).toLocaleLowerCase();
+                if(suffix != 'xls'){
+                    alert('只支持xls文件');
+                    return;
+                }
+                // FormData是ajax提供的接口,可以模拟键值对向后台提交参数;
+                // FormData最大的优势是不但能提交文本数据，还能提交二进制数据
+                var formData = new FormData();
+                formData.append('activityFile',activityFile);
+                formData.append('userName','KouChiao');
+                // 发送ajax请求
+                $.ajax({
+                    url: 'workbench/activity/importActivity.do',
+                    data: formData,
+                    processData:false,//设置ajax向后台提交参数之前，是否把参数统一转换成字符串：true--是,false--不是,默认是true
+                    contentType:false,//设置ajax向后台提交参数之前，是否把所有的参数统一按urlencoded编码：true--是,false--不是，默认是true
+                    type: 'post',
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data.code == '1'){
+                            // 成功提示
+                            alert("成功导入"+data.retData+"条记录");
+                            // 关闭模态窗口
+                            $('#importActivityModal').modal("hide");
+                            // 刷新活动市场页面, 保持页数不变
+                            queryActivityByConditionForPage(1,$('#demo_pag1').bs_pagination('getOption','rowPerPage'));
+                        }else{
+                            alert(data.message);
+                            return;
+                        }
+                    }
+                });
+            });
+
+            /**
+             * 根据页码和条数查询市场活动
+             * @param pageNo 页码
+             * @param pageSize 页数
+             */
             function queryActivityByConditionForPage(pageNo, pageSize) {
                 // 获取数据
                 var name = $("#query-name").val();
@@ -454,7 +499,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button id="editUpdate" type="button" class="btn btn-primary" >更新</button>
+                <button id="editUpdate" type="button" class="btn btn-primary">更新</button>
             </div>
         </div>
     </div>
